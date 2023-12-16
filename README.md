@@ -1,73 +1,69 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# NestJS roleased access control Implementation with JWT
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This repository contains a NestJS project that implements a Role-Based Access Control (RBAC) using JWT.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Installation and Setup
 
-## Description
+Follow these steps to set up and run the project locally:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+1. **Clone the Repository:**
+   ```bash
+   git clone https://github.com/prizzv/rolebased-access-control.git
+   cd rolebased-access-control
+2. **Install the Dependencies:**
+   ```bash
+   npm i
+3. **Run the project with the below command:**
+   ```bash
+   npm run start:dev
 
-## Installation
+#### Endpoints:
 
-```bash
-$ npm install
-```
+1. **Signup:**
+   - Endpoint: `POST /auth/local/signup`
+   - Description: Creates a new user and returns an access token and a refresh token
+   - Request Body: User credentials (email and password). optional fields name, phone
+   - Response: JWT tokens (access and refresh).
 
-## Running the app
+2. **Signin:**
+   - Endpoint: `POST /auth/local/signin`
+   - Description: Login a new user.
+   - Request Body: User details (email, password).
+   - Response: JWT tokens (access and refresh).
 
-```bash
-# development
-$ npm run start
+3. **Refresh Token:**
+   - Endpoint: `POST /auth/refresh`
+   - Description: Refreshes the access token using the refresh token.
+   - Request Headers: Authorization header with the refresh token.
+   - Response: New access and refresh tokens.
+4. **Logout**
+   -Endpoint: `POST /auth/logout`
+   - Description: Logs out a user and removes the refresh token from the users table.
+   - Request Headers: Authorization header with the refresh token.
+   - Response: success
 
-# watch mode
-$ npm run start:dev
+## Users Resource
 
-# production mode
-$ npm run start:prod
-```
+### UserController
 
-## Test
+The `UserController` oversees routes associated with users.
 
-```bash
-# unit tests
-$ npm run test
+#### Endpoints:
 
-# e2e tests
-$ npm run test:e2e
+1. **Get All Users:**
+   - Endpoint: `GET /user`
+   - Description: Only ADMIN users can view this route.
+   - Request Headers: Authorization header with the access token.
+   - Response: List of user details without the role ADMIN.
 
-# test coverage
-$ npm run test:cov
-```
+## Authentication and Authorization Approach
 
-## Support
+### Role-Based Access Control (RBAC)
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- Users are assigned roles to implement RBAC.
+- Access to specific routes is determined by roles, represented as an enum.
+- Resource access is finely controlled by guarding routes according to the user's role.
+  
+## Conclusion
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+This NestJS project showcases a robust authentication and authorization system employing JWT Strategy and Guards. It facilitates secure user authentication, role allocation, and precise route access control based on user roles. Tailor the implementation to suit your project's unique requirements.
