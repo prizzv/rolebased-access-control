@@ -6,7 +6,7 @@ export class JwtMiddleware implements NestMiddleware {
     use(req: Request, res: Response, next: NextFunction) {
         console.log(req.headers);
         next();
-        if (req.headers['cookies'] != 'cookies') {
+        if (req.headers['Authorization'] != 'cookies') {
             throw new Error('not authorized')
         }
     }

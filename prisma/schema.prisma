@@ -17,4 +17,17 @@ model User {
   email     String   @unique
   name      String?
   phone     String?  @unique
+  role      Role     @default(USER)
+
+  hash     String
+  hashedRt String?
+
+  @@map("users")
+}
+
+enum Role {
+  USER
+  ADMIN
+  SUPERADMIN
+  MANAGER
 }
