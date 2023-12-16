@@ -27,15 +27,10 @@ export class AuthService {
             },
         })
             .catch((error) => {
-                // if (error instanceof PrismaClientKnownRequestError) {
-                //     if (error.code === 'P2002') {
-                //         throw new ForbiddenException('Credentials incorrect');
-                //     }
-                // }
                 throw error;
             });
 
-        const tokens = await this.getTokens(user.id, user.email, user.role);
+        const tokens = await this.generateTokens(user.id, user.email, user.role);
         await this.updateRtHash(user.id, tokens.refresh_token);
 
         return tokens;
@@ -53,7 +48,7 @@ export class AuthService {
         const passwordMatches = await argon.verify(user.hash, dto.password);
         if (!passwordMatches) throw new ForbiddenException('Access Denied');
 
-        const tokens = await this.getTokens(user.id, user.email, user.role);
+        const tokens = await this.generateTokens(user.id, user.email, user.role);
         await this.updateRtHash(user.id, tokens.refresh_token);
 
         return tokens;
@@ -85,7 +80,7 @@ export class AuthService {
         const rtMatches = await argon.verify(user.hashedRt, rt);
         if (!rtMatches) throw new ForbiddenException('Access Denied');
 
-        const tokens = await this.getTokens(user.id, user.email, user.role);
+        const tokens = await this.generateTokens(user.id, user.email, user.role);
         await this.updateRtHash(user.id, tokens.refresh_token);
 
         return tokens;
@@ -103,7 +98,7 @@ export class AuthService {
         });
     }
 
-    async getTokens(userId: string, email: string, role: Role): Promise<Tokens> {
+    async generateTokens(userId: string, email: string, role: Role): Promise<Tokens> {
         const jwtPayload: JwtPayload = {
             sub: userId,
             email: email,
